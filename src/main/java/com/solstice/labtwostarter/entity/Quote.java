@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name="Quote")
+@Table(name="Quotes")
 public class Quote {
 
     @Id
@@ -12,25 +12,17 @@ public class Quote {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name="Symbol")
+    @Column(name="symbol")
     private String symbol;
 
-    @Column(name="Price")
+    @Column(name="price")
     private String price;
 
-    @Column(name="Volume")
+    @Column(name="volume")
     private int volume;
 
-    @Column(name="Date")
+    @Column(name="date")
     private Timestamp date;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getSymbol() {
         return symbol;
@@ -63,8 +55,5 @@ public class Quote {
     public void setDate(Timestamp date) {
         this.date = date;
     }
-
-
-
 
 }
