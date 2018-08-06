@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 public class QuoteController {
@@ -24,31 +26,31 @@ public class QuoteController {
         saveQuotesToDatabase(quoteArray);
     }
 
-    public Quote[] extractQuotesFromJsonFile() throws IOException {
+    private Quote[] extractQuotesFromJsonFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String pathName = "/Users/johnpauldoherty/Downloads/lab-two-starter/src/main/resources/data.json";
         return mapper.readValue(new File(pathName), Quote[].class);
     }
 
-    public void saveQuotesToDatabase(Quote[] quotesArray) {
+    private void saveQuotesToDatabase(Quote[] quotesArray) {
         quoteRepository.saveAll(Arrays.asList(quotesArray));
     }
 
-//    @RequestMapping(value = "/{symbol}/{date}", method = RequestMethod.GET)
-//    AggregatedStockData aggregatedStockData(@PathVariable String symbol, @PathVariable String date) {
-//        return new AggregatedStockData();
-//    }
-
-    @GetMapping(path="/{symbol}")
-    public AggregatedStockData getDataBySymbol(@PathVariable String symbol) {
-        return quoteRepository.getDataBySymbol(symbol);
+    @RequestMapping(value = "/{symbol}/{dateString}", method = RequestMethod.GET)
+    AggregatedStockData getDataBySymbolAndDate(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
+        Timestamp timestamp = getTimestampFromDateString(dateString);
+        return quoteRepository.getDataBySymbolAndDay(symbol, timestamp);
     }
 
-    @GetMapping(path="/testing/{symbol}")
-    public Quote getAQuote(@PathVariable String symbol) {
-        Quote myquote = quoteRepository.getAQuote();
-        System.out.println(myquote);
-        return new Quote();
+    private static Timestamp getTimestampFromDateString(String dateString) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date date = simpleDateFormat.parse(dateString);
+        return new Timestamp(date.getTime());
     }
 
+    @RequestMapping(value = "/{symbol}/{dateString}/monthly", method = RequestMethod.GET)
+    AggregatedStockData getMonthlyDataBySymbolAndDate(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
+        Timestamp timestamp = getTimestampFromDateString(dateString);
+        return quoteRepository.getMonthlyDataBySymbolAndDay(symbol, timestamp);
+    }
 }

@@ -6,16 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.sql.Timestamp;
 
 @Repository
 public interface QuoteRepository extends CrudRepository<Quote, Long> {
 
-    @Query("select new com.solstice.labtwostarter.entity.AggregatedStockData(MAX(q.price)) from Quote q where q.symbol = ?1")
-    AggregatedStockData getDataBySymbol(String symbol);
+    String baseQuery = "select new com.solstice.labtwostarter.entity.AggregatedStockData(max(q.price), " +
+                        "min(price), sum(volume)) from Quote q where q.symbol = ?1";
 
-    @Query("select q from Quote q where q.id = 3")
-    Quote getAQuote();
+    @Query(baseQuery + " and day(q.date) = day(?2)")
+    AggregatedStockData getDataBySymbolAndDay(String symbol, Timestamp timestamp);
 
+    @Query(baseQuery + " and month(q.date) = month(?2)")
+    AggregatedStockData getMonthlyDataBySymbolAndDay(String symbol, Timestamp timestamp);
 
 }
