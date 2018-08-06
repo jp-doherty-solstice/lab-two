@@ -2,14 +2,14 @@ package com.solstice.labtwostarter.entity;
 
 import static java.lang.Math.toIntExact;
 
-public class AggregatedStockData {
+public class StockData {
 
     private Double dailyHigh;
     private Double dailyLow;
     private int totalVolume;
     private Double closingPrice;
 
-    public AggregatedStockData(Double dailyHigh, Double dailyLow, Long totalVolume) {
+    public StockData(Double dailyHigh, Double dailyLow, Long totalVolume) {
         this.dailyHigh = dailyHigh;
         this.dailyLow = dailyLow;
         this.totalVolume = toIntExact(totalVolume);

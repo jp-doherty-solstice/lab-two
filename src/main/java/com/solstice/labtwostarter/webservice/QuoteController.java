@@ -1,7 +1,7 @@
 package com.solstice.labtwostarter.webservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.solstice.labtwostarter.entity.AggregatedStockData;
+import com.solstice.labtwostarter.entity.StockData;
 import com.solstice.labtwostarter.entity.Quote;
 import com.solstice.labtwostarter.repository.QuoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,8 +30,8 @@ public class QuoteController {
 
     private Quote[] extractQuotesFromJsonFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        String pathName = "/Users/johnpauldoherty/Downloads/lab-two-starter/src/main/resources/data.json";
-        return mapper.readValue(new File(pathName), Quote[].class);
+        URL url = new URL("https://bootcamp-training-files.cfapps.io/week2/week2-stocks.json");
+        return mapper.readValue(url, Quote[].class);
     }
 
     private void saveQuotesToDatabase(Quote[] quotesArray) {
@@ -37,19 +39,18 @@ public class QuoteController {
     }
 
     @RequestMapping(value = "/{symbol}/{dateString}", method = RequestMethod.GET)
-    AggregatedStockData getDataBySymbolAndDate(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
+    StockData getData(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
         Timestamp timestamp = getTimestampFromDateString(dateString);
-        AggregatedStockData data = quoteRepository.getDataBySymbolAndDay(symbol, timestamp);
+        StockData data = quoteRepository.getDataBySymbolAndDay(symbol, getTimestampFromDateString(dateString));
         data.setClosingPrice(quoteRepository.getClosingPrice(symbol, timestamp));
         return data;
     }
 
     @RequestMapping(value = "/{symbol}/{dateString}/monthly", method = RequestMethod.GET)
-    AggregatedStockData getMonthlyDataBySymbolAndDate(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
+    StockData getMonthlyData(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
         Timestamp timestamp = getTimestampFromDateString(dateString);
-        AggregatedStockData data = quoteRepository.getMonthlyDataBySymbolAndDay(symbol, timestamp);
-        Double closingPrice = quoteRepository.getMonthClosingPrice(symbol, timestamp);
-        data.setClosingPrice(closingPrice);
+        StockData data = quoteRepository.getMonthlyDataBySymbolAndDay(symbol, timestamp);
+        data.setClosingPrice(quoteRepository.getMonthClosingPrice(symbol, timestamp));
         return data;
     }
 
