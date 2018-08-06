@@ -39,7 +39,18 @@ public class QuoteController {
     @RequestMapping(value = "/{symbol}/{dateString}", method = RequestMethod.GET)
     AggregatedStockData getDataBySymbolAndDate(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
         Timestamp timestamp = getTimestampFromDateString(dateString);
-        return quoteRepository.getDataBySymbolAndDay(symbol, timestamp);
+        AggregatedStockData data = quoteRepository.getDataBySymbolAndDay(symbol, timestamp);
+        data.setClosingPrice(quoteRepository.getClosingPrice(symbol, timestamp));
+        return data;
+    }
+
+    @RequestMapping(value = "/{symbol}/{dateString}/monthly", method = RequestMethod.GET)
+    AggregatedStockData getMonthlyDataBySymbolAndDate(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
+        Timestamp timestamp = getTimestampFromDateString(dateString);
+        AggregatedStockData data = quoteRepository.getMonthlyDataBySymbolAndDay(symbol, timestamp);
+        Double closingPrice = quoteRepository.getMonthClosingPrice(symbol, timestamp);
+        data.setClosingPrice(closingPrice);
+        return data;
     }
 
     private static Timestamp getTimestampFromDateString(String dateString) throws ParseException {
@@ -48,9 +59,4 @@ public class QuoteController {
         return new Timestamp(date.getTime());
     }
 
-    @RequestMapping(value = "/{symbol}/{dateString}/monthly", method = RequestMethod.GET)
-    AggregatedStockData getMonthlyDataBySymbolAndDate(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
-        Timestamp timestamp = getTimestampFromDateString(dateString);
-        return quoteRepository.getMonthlyDataBySymbolAndDay(symbol, timestamp);
-    }
 }

@@ -4,29 +4,31 @@ import static java.lang.Math.toIntExact;
 
 public class AggregatedStockData {
 
-    private double dailyHigh;
-    private double dailyLow;
+    private Double dailyHigh;
+    private Double dailyLow;
     private int totalVolume;
+    private Double closingPrice;
 
-    public AggregatedStockData(String dailyHigh, String dailyLow, Long totalVolume) {
-        this.dailyHigh = Double.parseDouble(dailyHigh);
-        this.dailyLow = Double.parseDouble(dailyLow);
+    public AggregatedStockData(Double dailyHigh, Double dailyLow, Long totalVolume) {
+        this.dailyHigh = dailyHigh;
+        this.dailyLow = dailyLow;
         this.totalVolume = toIntExact(totalVolume);
+        this.closingPrice = null;
     }
 
-    public double getDailyHigh() {
+    public Double getDailyHigh() {
         return dailyHigh;
     }
 
-    public void setDailyHigh(double dailyHigh) {
+    public void setDailyHigh(Double dailyHigh) {
         this.dailyHigh = dailyHigh;
     }
 
-    public double getDailyLow() {
+    public Double getDailyLow() {
         return dailyLow;
     }
 
-    public void setDailyLow(double dailyLow) {
+    public void setDailyLow(Double dailyLow) {
         this.dailyLow = dailyLow;
     }
 
@@ -36,5 +38,13 @@ public class AggregatedStockData {
 
     public void setTotalVolume(int totalVolume) {
         this.totalVolume = totalVolume;
+    }
+
+    public Double getClosingPrice() {
+        return closingPrice;
+    }
+
+    public void setClosingPrice(Double closingPrice) {
+        this.closingPrice = closingPrice;
     }
 }

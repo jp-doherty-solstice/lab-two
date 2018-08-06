@@ -16,7 +16,7 @@ public class Quote {
     private String symbol;
 
     @Column(name="price")
-    private String price;
+    private Double price;
 
     @Column(name="volume")
     private int volume;
@@ -32,11 +32,11 @@ public class Quote {
         this.symbol = symbol;
     }
 
-    public String getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
