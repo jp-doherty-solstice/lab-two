@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 @Service
 public class QuoteService {
@@ -51,7 +52,7 @@ public class QuoteService {
 
     private static Timestamp getTimestampFromDateString(String dateString) throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        java.util.Date date = simpleDateFormat.parse(dateString);
+        Date date = simpleDateFormat.parse(dateString);
         return new Timestamp(date.getTime());
     }
 
