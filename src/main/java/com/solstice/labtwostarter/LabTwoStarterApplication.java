@@ -9,4 +9,5 @@ public class LabTwoStarterApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LabTwoStarterApplication.class, args);
 	}
+
 }

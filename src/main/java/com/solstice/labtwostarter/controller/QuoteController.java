@@ -1,15 +1,14 @@
-package com.solstice.labtwostarter.webservice;
+package com.solstice.labtwostarter.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solstice.labtwostarter.entity.StockData;
 import com.solstice.labtwostarter.entity.Quote;
 import com.solstice.labtwostarter.repository.QuoteRepository;
+import com.solstice.labtwostarter.service.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -22,23 +21,15 @@ public class QuoteController {
     @Autowired
     private QuoteRepository quoteRepository;
 
-    @RequestMapping(value = "/load", method = RequestMethod.POST)
-    void load() throws IOException {
-        Quote[] quoteArray = extractQuotesFromJsonFile();
-        saveQuotesToDatabase(quoteArray);
+    @Autowired
+    private QuoteService quoteService;
+
+    @PostMapping("/load")
+    void loadQuotes() throws IOException {
+        quoteService.loadQuotes();
     }
 
-    private Quote[] extractQuotesFromJsonFile() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        URL url = new URL("https://bootcamp-training-files.cfapps.io/week2/week2-stocks.json");
-        return mapper.readValue(url, Quote[].class);
-    }
-
-    private void saveQuotesToDatabase(Quote[] quotesArray) {
-        quoteRepository.saveAll(Arrays.asList(quotesArray));
-    }
-
-    @RequestMapping(value = "/{symbol}/{dateString}", method = RequestMethod.GET)
+    @GetMapping("/{symbol}/{dateString}")
     StockData getData(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
         Timestamp timestamp = getTimestampFromDateString(dateString);
         StockData data = quoteRepository.getDataBySymbolAndDay(symbol, getTimestampFromDateString(dateString));
@@ -46,7 +37,7 @@ public class QuoteController {
         return data;
     }
 
-    @RequestMapping(value = "/{symbol}/{dateString}/monthly", method = RequestMethod.GET)
+    @GetMapping("/{symbol}/{dateString}/monthly")
     StockData getMonthlyData(@PathVariable String symbol, @PathVariable String dateString) throws ParseException {
         Timestamp timestamp = getTimestampFromDateString(dateString);
         StockData data = quoteRepository.getMonthlyDataBySymbolAndDay(symbol, timestamp);
