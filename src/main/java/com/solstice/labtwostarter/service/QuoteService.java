@@ -28,7 +28,7 @@ public class QuoteService {
 
     private Quote[] extractQuotesFromJsonFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        URL url = new URL("https://bootcamp-training-files.cfapps.io/week2/week2-stocks.json");
+        URL url = new URL("https://bootcamp-training-files.cfapps.io/week4/week4_stocks.json");
         return mapper.readValue(url, Quote[].class);
     }
 
@@ -38,14 +38,14 @@ public class QuoteService {
 
     public StockData getData(String symbol, String dateString) throws ParseException {
         Timestamp timestamp = getTimestampFromDateString(dateString);
-        StockData data = quoteRepository.getDataBySymbolAndDay(symbol, getTimestampFromDateString(dateString));
+        StockData data = quoteRepository.getData(symbol, getTimestampFromDateString(dateString));
         data.setClosingPrice(quoteRepository.getClosingPrice(symbol, timestamp));
         return data;
     }
 
     public StockData getMonthlyData(String symbol, String dateString) throws ParseException {
         Timestamp timestamp = getTimestampFromDateString(dateString);
-        StockData data = quoteRepository.getMonthlyDataBySymbolAndDay(symbol, timestamp);
+        StockData data = quoteRepository.getMonthlyData(symbol, timestamp);
         data.setClosingPrice(quoteRepository.getMonthClosingPrice(symbol, timestamp));
         return data;
     }

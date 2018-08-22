@@ -14,6 +14,8 @@ public class QuoteController {
     @Autowired
     private QuoteService quoteService;
 
+
+
     @PostMapping("/load")
     void loadQuotes() throws IOException {
         quoteService.loadQuotes();

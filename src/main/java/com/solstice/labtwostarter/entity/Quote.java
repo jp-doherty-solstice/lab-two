@@ -24,6 +24,13 @@ public class Quote {
     @Column(name="date")
     private Timestamp date;
 
+    public Quote(String symbol, Double price, int volume, Timestamp date) {
+        this.symbol = symbol;
+        this.price = price;
+        this.volume = volume;
+        this.date = date;
+    }
+
     public String getSymbol() {
         return symbol;
     }
